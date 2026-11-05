@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>题库中心</title>
+  <style>
+    :root {
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      color: #303846;
+      background: #f3f6f9;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .header {
+      height: 62px;
+      background: #fff;
+      border-bottom: 1px solid #e8edf2;
+    }
+    .nav {
+      width: min(1180px, calc(100% - 40px));
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin: 0 auto;
+    }
+    .logo { color: #3989db; font-size: 19px; font-weight: 700; }
+    .nav-links { display: flex; align-items: center; gap: 25px; height: 100%; }
+    .nav-links a {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      color: #626d7a;
+      font-size: 14px;
+    }
+    .nav-links a.active { color: #3989db; border-bottom: 2px solid #3989db; }
+    .login {
+      margin-left: auto;
+      padding: 8px 19px;
+      border: 0;
+      border-radius: 5px;
+      color: #fff;
+      background: #409eff;
+      font-size: 13px;
+    }
+
+    main { width: min(1180px, calc(100% - 40px)); margin: 24px auto 42px; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(270px, 1fr); gap: 22px; }
+    .panel { border: 1px solid #e8edf2; border-radius: 5px; background: #fff; }
+    .welcome {
+      min-height: 164px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 27px 32px;
+      color: #fff;
+      background: linear-gradient(110deg, #3688d8, #62a9ee);
+    }
+    .welcome h1 { margin: 0 0 9px; font-size: 24px; font-weight: 600; }
+    .welcome p { margin: 0; color: #eaf4ff; font-size: 14px; }
+    .welcome-mark { color: #ffffffb8; font-size: 54px; font-weight: 300; }
+    .section { margin-top: 20px; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 19px;
+      border-bottom: 1px solid #edf0f3;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .section-title a { color: #409eff; font-size: 12px; font-weight: 400; }
+    .languages { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; padding: 16px; }
+    .language {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 17px;
+      border: 1px solid #e9edf2;
+      border-radius: 5px;
+      transition: border-color .15s, background .15s;
+    }
+    .language:hover { border-color: #9ccafa; background: #fafdff; }
+    .language-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 5px;
+      color: #377fc1;
+      background: #eaf4ff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .language h2 { margin: 0 0 5px; font-size: 15px; }
+    .language p { margin: 0; color: #8993a0; font-size: 12px; }
+    .topics { display: grid; grid-template-columns: repeat(4, 1fr); padding: 5px 16px 17px; }
+    .topic {
+      padding: 11px 8px;
+      border: 0;
+      border-radius: 4px;
+      color: #586574;
+      background: transparent;
+      font-size: 13px;
+    }
+    .topic:hover, .topic.active { color: #3189df; background: #edf6ff; }
+    .search-row { display: flex; gap: 9px; padding: 15px 16px; border-bottom: 1px solid #edf0f3; }
+    .search-row input {
+      min-width: 0;
+      flex: 1;
+      height: 36px;
+      padding: 0 11px;
+      border: 1px solid #dfe5eb;
+      border-radius: 4px;
+      outline: none;
+      font-size: 13px;
+    }
+    .search-row input:focus { border-color: #78b6f2; }
+    .search-row button { padding: 0 16px; border: 0; border-radius: 4px; color: #fff; background: #409eff; font-size: 13px; }
+    .problem-list { padding: 0 18px; }
+    .problem {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 47px;
+      border-bottom: 1px solid #f0f2f5;
+      font-size: 13px;
+    }
+    .problem[hidden] { display: none; }
+    .problem:last-child { border-bottom: 0; }
+    .problem-id { width: 52px; color: #8b95a1; font-size: 12px; }
+    .problem-name { flex: 1; }
+    .problem-name:hover { color: #3989db; }
+    .difficulty { color: #55a879; font-size: 12px; }
+    .sidebar .panel + .panel { margin-top: 20px; }
+    .notice { padding: 19px; color: #687482; font-size: 13px; line-height: 1.8; }
+    .notice time { display: block; margin-top: 8px; color: #9aa3ae; font-size: 11px; }
+    .ranking { padding: 5px 17px 10px; }
+    .rank-row { display: grid; grid-template-columns: 35px 1fr auto; align-items: center; min-height: 38px; border-bottom: 1px solid #f0f2f5; font-size: 12px; }
+    .rank-row:last-child { border: 0; }
+    .rank-number { color: #8993a0; }
+    .rank-number.top { color: #e2a53a; font-weight: 700; }
+    .rank-count { color: #7a8794; }
+    .empty { display: none; padding: 22px; color: #8993a0; text-align: center; font-size: 13px; }
+
+    @media (max-width: 760px) {
+      .nav { width: calc(100% - 28px); gap: 18px; }
+      .nav-links { gap: 15px; }
+      main { width: calc(100% - 28px); margin-top: 16px; }
+      .layout { grid-template-columns: 1fr; gap: 16px; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .sidebar .panel + .panel { margin-top: 0; }
+    }
+    @media (max-width: 480px) {
+      .header { height: 54px; }
+      .nav { gap: 14px; }
+      .logo { font-size: 16px; white-space: nowrap; }
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 12px; }
+      .nav-links a:nth-child(3) { display: none; }
+      .login { padding: 7px 12px; }
+      .welcome { min-height: 135px; padding: 22px; }
+      .welcome h1 { font-size: 20px; }
+      .welcome-mark { font-size: 40px; }
+      .languages { grid-template-columns: 1fr; }
+      .topics { grid-template-columns: repeat(2, 1fr); }
+      .sidebar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav" aria-label="主导航">
+      <a class="logo" href="#home">极码题库</a>
+      <div class="nav-links">
+        <a class="active" href="#home">首页</a>
+        <a href="#problems">题目</a>
+        <a href="#topics">训练</a>
+        <a href="#ranking">排名</a>
+      </div>
+      <button class="login" type="button">登录</button>
+    </nav>
+  </header>
+
+  <main id="home">
+    <div class="layout">
+      <div>
+        <section class="panel welcome">
+          <div>
+            <h1>欢迎使用编程题库</h1>
+            <p>选择 Python 或 C++，开始练习与提升。</p>
+          </div>
+          <div class="welcome-mark" aria-hidden="true">{ }</div>
+        </section>
+
+        <section class="panel section" id="topics">
+          <div class="section-title">选择语言</div>
+          <div class="languages">
+            <a class="language" href="#problems" data-language="Python">
+              <span class="language-icon">Py</span>
+              <span><h2>Python</h2><p>Python 3 · 入门到进阶</p></span>
+            </a>
+            <a class="language" href="#problems" data-language="C++">
+              <span class="language-icon">C++</span>
+              <span><h2>C++</h2><p>C++17 · 入门到进阶</p></span>
+            </a>
+          </div>
+          <div class="section-title">知识分类</div>
+          <div class="topics">
+            <button class="topic active" data-topic="全部">全部</button>
+            <button class="topic" data-topic="基础语法">基础语法</button>
+          </div>
+        </section>
+
+        <section class="panel section" id="problems">
+          <div class="section-title"><span>题目练习</span><a href="#problems">全部题目 →</a></div>
+          <form class="search-row" id="search-form">
+            <input id="search" type="search" placeholder="搜索题号或题目名称" aria-label="搜索题目">
+            <button type="submit">搜索</button>
+          </form>
+          <div class="problem-list" id="problem-list">
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1001</span><a class="problem-name" href="P1001.html">Hello,World!</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1002</span><a class="problem-name" href="P1002.html">输出第二个整数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1003</span><a class="problem-name" href="P1003.html">对齐输出</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1004</span><a class="problem-name" href="P1004.html">字符三角形</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1005</span><a class="problem-name" href="P1005.html">地球人口承载力估计</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1006</span><a class="problem-name" href="P1006.html">A+B问题</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1007</span><a class="problem-name" href="P1007.html">计算(a+b)*c的值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1008</span><a class="problem-name" href="P1008.html">计算(a+b)/c的值(C++)</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1009</span><a class="problem-name" href="P1009.html">带余除法</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1010</span><a class="problem-name" href="P1010.html">计算分数的浮点数值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1011</span><a class="problem-name" href="P1011.html">交换两个正整数a和b的值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1012</span><a class="problem-name" href="P1012.html">圆柱体的表面积</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1013</span><a class="problem-name" href="P1013.html">鸡兔同笼的问题</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1014</span><a class="problem-name" href="P1014.html">甲流疫情死亡率</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1015</span><a class="problem-name" href="P1015.html">计算多项式的值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1016</span><a class="problem-name" href="P1016.html">温度表达转化</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1017</span><a class="problem-name" href="P1017.html">与圆相关的计算</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1018</span><a class="problem-name" href="P1018.html">计算并联电阻的阻值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1019</span><a class="problem-name" href="P1019.html">整型数据类型存储空间大小</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1020</span><a class="problem-name" href="P1020.html">浮点型数据类型存储空间大小</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1021</span><a class="problem-name" href="P1021.html">其他数据类型存储空间大小</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1022</span><a class="problem-name" href="P1022.html">浮点数向零舍入</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1023</span><a class="problem-name" href="P1023.html">打印ASCII码</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1024</span><a class="problem-name" href="P1024.html">打印字符</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1025</span><a class="problem-name" href="P1025.html">整型与布尔型的转换</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1026</span><a class="problem-name" href="P1026.html">Hello,World!的大小</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1027</span><a class="problem-name" href="P1027.html">保留3位小数的浮点数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1028</span><a class="problem-name" href="P1028.html">保留12位小数的浮点数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1029</span><a class="problem-name" href="P1029.html">空格分隔输出</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1030</span><a class="problem-name" href="P1030.html">输出浮点数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1031</span><a class="problem-name" href="P1031.html">字符菱形</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1033</span><a class="problem-name" href="P1033.html">计算球的体积</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1034</span><a class="problem-name" href="P1034.html">反向输出一个三位数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1035</span><a class="problem-name" href="P1035.html">大象喝水</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1036</span><a class="problem-name" href="P1036.html">计算线段长度</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1037</span><a class="problem-name" href="P1037.html">计算三角形面积</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1038</span><a class="problem-name" href="P1038.html">等差数列末项计算</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1039</span><a class="problem-name" href="P1039.html">A*B问题</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1040</span><a class="problem-name" href="P1040.html">计算2的幂</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1041</span><a class="problem-name" href="P1041.html">苹果和虫子</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1042</span><a class="problem-name" href="P1042.html">数字拆分</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1043</span><a class="problem-name" href="P1043.html">立方与平方</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1044</span><a class="problem-name" href="P1044.html">判断数正负</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1045</span><a class="problem-name" href="P1045.html">输出绝对值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1046</span><a class="problem-name" href="P1046.html">奇偶数判断</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1047</span><a class="problem-name" href="P1047.html">奇偶ASCII值判断</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1048</span><a class="problem-name" href="P1048.html">整数大小比较</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1049</span><a class="problem-name" href="P1049.html">判断是否为两位数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1050</span><a class="problem-name" href="P1050.html">收集瓶盖赢大奖</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1051</span><a class="problem-name" href="P1051.html">判断一个数能否同时被3和5整除</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1052</span><a class="problem-name" href="P1052.html">判断能否被3，5，7整除</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1053</span><a class="problem-name" href="P1053.html">有一门课不及格的学生</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1054</span><a class="problem-name" href="P1054.html">晶晶赴约会</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1055</span><a class="problem-name" href="P1055.html">骑车与走路</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1056</span><a class="problem-name" href="P1056.html">计算邮资</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1057</span><a class="problem-name" href="P1057.html">最大数输出</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1058</span><a class="problem-name" href="P1058.html">三角形判断</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1059</span><a class="problem-name" href="P1059.html">判断闰年</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1060</span><a class="problem-name" href="P1060.html">点和正方形的关系</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1061</span><a class="problem-name" href="P1061.html">简单计算器</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1062</span><a class="problem-name" href="P1062.html">求一元二次方程</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1063</span><a class="problem-name" href="P1063.html">分段函数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1064</span><a class="problem-name" href="P1064.html">星期几的第一个字母</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1065</span><a class="problem-name" href="P1065.html">最大数</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1066</span><a class="problem-name" href="P1066.html">一年中的第几天</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1067</span><a class="problem-name" href="P1067.html">回文数判断</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1068</span><a class="problem-name" href="P1068.html">大写字母转换成小写字母</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1069</span><a class="problem-name" href="P1069.html">计算人体BMI值</a><span class="difficulty">简单</span></div>
+            <div class="problem" data-topic="基础语法" data-language="Python,C++"><span class="problem-id">1070</span><a class="problem-name" href="P1070.html">求平均年龄</a><span class="difficulty">简单</span></div>
+          </div>
+          <div class="empty" id="empty">没有找到相关题目</div>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <section class="panel">
+          <div class="section-title"><span>公告</span><a href="#notice">更多</a></div>
+          <div class="notice" id="notice">欢迎来到编程题库。选择语言和知识分类，开始你的第一道练习题。<time>题库公告</time></div>
+        </section>
+        <section class="panel" id="ranking">
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <script>
+    const searchForm = document.querySelector("#search-form");
+    const searchInput = document.querySelector("#search");
+    const problems = document.querySelectorAll(".problem");
+    const empty = document.querySelector("#empty");
+    const topicButtons = document.querySelectorAll(".topic");
+    let activeTopic = "全部";
+    let activeLanguage = "全部";
+
+    function filterProblems() {
+      const keyword = searchInput.value.trim().toLocaleLowerCase();
+      let visibleCount = 0;
+      problems.forEach((problem) => {
+        const matchesTopic = activeTopic === "全部" || problem.dataset.topic === activeTopic;
+        const matchesLanguage = activeLanguage === "全部" || problem.dataset.language.split(",").includes(activeLanguage);
+        const matchesSearch = problem.textContent.toLocaleLowerCase().includes(keyword);
+        const visible = matchesTopic && matchesLanguage && matchesSearch;
+        problem.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+      empty.style.display = visibleCount ? "none" : "block";
+    }
+
+    searchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      filterProblems();
+    });
+    searchInput.addEventListener("input", filterProblems);
+    topicButtons.forEach((button) => button.addEventListener("click", () => {
+      activeTopic = button.dataset.topic;
+      topicButtons.forEach((item) => item.classList.toggle("active", item === button));
+      filterProblems();
+    }));
+    document.querySelectorAll(".language").forEach((link) => link.addEventListener("click", () => {
+      activeLanguage = link.dataset.language;
+      filterProblems();
+    }));
+  </script>
+</body>
+</html>
