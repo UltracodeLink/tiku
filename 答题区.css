@@ -62,30 +62,21 @@
   background: #fff;
   font-size: 12px;
 }
-.editor-actions .submit-code { border-color: #409eff; color: #fff; background: #409eff; }
+.editor-actions .run-code { border-color: #409eff; color: #fff; background: #409eff; }
+.editor-actions button:disabled { cursor: wait; opacity: .7; }
 .editor-status { min-height: 18px; margin: 9px 0 0; color: #8993a0; font-size: 12px; }
-.output-check { margin-top: 21px; padding-top: 18px; border-top: 1px solid #edf0f3; }
+.run-result { margin-top: 21px; padding-top: 18px; border-top: 1px solid #edf0f3; }
 .output-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .output-heading h3 { margin: 0; font-size: 15px; }
-.output-check > p { margin: 7px 0 13px; color: #8993a0; font-size: 12px; }
+.run-result > p.runner-hint { margin: 7px 0 13px; color: #8993a0; font-size: 12px; }
 .sample-picker { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; color: #687482; font-size: 12px; }
 .sample-picker select { height: 30px; padding: 0 8px; border: 1px solid #dfe5eb; border-radius: 4px; background: #fff; }
 .sample-input { margin: 0 0 10px; padding: 10px 12px; border: 1px solid #e5e9ef; border-radius: 4px; background: #f7f9fb; }
 .sample-input-label { margin-bottom: 6px; color: #7f8a97; font-size: 11px; }
 .sample-input pre { overflow: auto; margin: 0; color: #394655; font: 12px/1.6 Consolas, "Courier New", monospace; white-space: pre-wrap; }
-.program-output {
-  display: block;
-  width: 100%;
-  min-height: 90px;
-  padding: 10px 12px;
-  border: 1px solid #dfe5eb;
-  border-radius: 4px;
-  outline: none;
-  font: 12px/1.6 Consolas, "Courier New", monospace;
-}
-.program-output:focus { border-color: #78b6f2; }
-.compare-actions { display: flex; justify-content: flex-end; margin-top: 9px; }
-.compare-output { min-height: 34px; padding: 0 14px; border: 0; border-radius: 4px; color: #fff; background: #409eff; font-size: 12px; }
+.run-output { overflow: hidden; border: 1px solid #e5e9ef; border-radius: 4px; background: #fbfcfe; }
+.run-output .sample-input-label { margin: 0; padding: 8px 12px; border-bottom: 1px solid #e5e9ef; background: #f7f9fb; }
+.program-output { overflow: auto; min-height: 72px; max-height: 300px; margin: 0; padding: 10px 12px; color: #394655; font: 12px/1.6 Consolas, "Courier New", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 .compare-status { min-height: 18px; margin: 9px 0 0; font-size: 12px; }
 .compare-status.correct { color: #319568; }
 .compare-status.incorrect { color: #d66b55; }

@@ -1,4 +1,44 @@
 const questions = {
+  1001: {
+    title: "Hello,World!",
+    description: "编写一个能够输出“Hello,World!”的程序。注意：“Hello, World!”中间有空格。",
+    input: "无。",
+    output: "输出 Hello, World!",
+    sampleInput: "",
+    sampleOutput: "Hello, World!"
+  },
+  1002: {
+    title: "输出第二个整数",
+    description: "输入三个 32 位有符号整数，将第二个输入的整数输出。",
+    input: "三行，每行一个 32 位有符号整数。",
+    output: "输出一个整数，即输入的第二个整数。",
+    sampleInput: "123\n456\n789",
+    sampleOutput: "456"
+  },
+  1003: {
+    title: "对齐输出",
+    description: "读入三个整数，每个整数至少占 8 个字符宽度，右对齐输出；整数之间以一个空格分开。",
+    input: "三行，依次为三个整数。",
+    output: "一行，按格式输出三个整数。",
+    sampleInput: "123456789\n0\n-1",
+    sampleOutput: "123456789        0       -1"
+  },
+  1004: {
+    title: "字符三角形",
+    description: "给定一个字符，用它构造一个底边长 5 个字符、高 3 个字符的等腰字符三角形。",
+    input: "一行，包含一个字符。",
+    output: "输出由该字符构成的等腰字符三角形。",
+    sampleInput: "*",
+    sampleOutput: "  *\n ***\n*****"
+  },
+  1005: {
+    title: "地球人口承载力估计",
+    description: "假设地球上的新生资源按恒定速度增长。现有资源加上新生资源可供 x 亿人生活 a 年，或供 y 亿人生活 b 年。估计地球最多能够养活多少亿人。",
+    input: "一行包含四个正整数 x、a、y、b，以空格分隔。保证 x>y、a<b、ax<by，且各整数不大于 10000。",
+    output: "输出最多能够养活的人数，舍入到小数点后两位。",
+    sampleInput: "110 90 90 210",
+    sampleOutput: "75.00"
+  },
   1006: {
     title: "A+B问题",
     description: "输入两个整数，计算并输出它们的和。",
@@ -579,12 +619,7 @@ section("题目描述", problem.description);
 section("输入描述", problem.input);
 section("输出描述", problem.output);
 
-const sampleTitle = document.createElement("h2");
-sampleTitle.textContent = "样例输入";
-const sampleInput = document.createElement("pre");
 const samples = problem.samples || [{ input: problem.sampleInput || "", output: problem.sampleOutput }];
-sampleInput.textContent = samples[0].input || "无";
-article.append(sampleTitle, sampleInput);
 
 const editorSection = document.createElement("section");
 editorSection.className = "solution";
@@ -592,18 +627,18 @@ editorSection.innerHTML = `
   <div class="solution-heading"><h2>编写代码</h2><label class="language-picker">编程语言<select class="language-select" aria-label="选择编程语言"><option value="python">Python 3</option><option value="cpp">C++17</option></select></label></div>
   <div class="editor-bar"><strong class="file-name">main.py</strong><span>代码编辑区</span></div>
   <textarea class="code-editor" aria-label="代码编辑区" placeholder="在这里编写你的代码" spellcheck="false"></textarea>
-  <div class="editor-actions"><button class="reset-code" type="button">清空代码</button></div>
+  <div class="editor-actions"><button class="reset-code" type="button">清空代码</button><button class="run-code" type="button">运行并评测</button></div>
   <p class="editor-status" role="status" aria-live="polite"></p>`;
 const answerSection = document.createElement("section");
-answerSection.className = "solution output-check";
+answerSection.className = "solution run-result";
 answerSection.innerHTML = `
-  <div class="output-heading"><h3>填写答案</h3></div>
-  <p>运行你自己编写的程序后，把运行结果填写在这里进行样例比对。</p>
+  <div class="output-heading"><h3>样例测试</h3></div>
+  <p class="runner-hint">代码和输入只在本机浏览器的 WebAssembly 沙箱中运行，不会上传到题库服务器。</p>
   <label class="sample-picker">测试样例<select class="sample-select"></select></label>
   <div class="sample-input"><div class="sample-input-label">样例输入</div><pre></pre></div>
-  <textarea class="program-output" aria-label="填写你的答案" placeholder="填写你的程序输出，不会显示参考答案"></textarea>
-  <div class="compare-actions"><button class="compare-output" type="button">检查答案</button></div>
+  <div class="run-output"><div class="sample-input-label">程序输出</div><pre class="program-output" aria-live="polite">点击“运行并评测”查看输出。</pre></div>
   <p class="compare-status" role="status" aria-live="polite"></p>`;
+answerSection.querySelector(".sample-input pre").textContent = samples[0].input || "（本题无输入）";
 const sampleSelect = answerSection.querySelector(".sample-select");
 samples.forEach((sample, index) => {
   const option = document.createElement("option");
@@ -617,7 +652,7 @@ samples.forEach((sample, index) => {
   answerSection.append(referenceAnswer);
 });
 if (problem.specialJudge) {
-  answerSection.querySelector(".output-check > p").textContent = "本题为特殊判题，答案不唯一；此处仅对照题目给出的样例文本。";
+  answerSection.querySelector(".runner-hint").textContent = "本题为特殊判题：程序会在浏览器沙箱中运行，但这里只能与示例文本比较，不能替代官方判题。代码和输入不会上传到题库服务器。";
 }
 article.append(editorSection, answerSection);
 root.append(article);
